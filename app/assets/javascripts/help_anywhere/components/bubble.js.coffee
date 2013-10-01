@@ -36,6 +36,7 @@ do ( $ = jQuery ) ->
     </div>
   """
 
+  # Just constants to get named into array for d&d of resize handling
   X = 0
   Y = 1
   LEFT = 0
@@ -46,6 +47,10 @@ do ( $ = jQuery ) ->
   class Bubble extends window.HelpAnywhere.Component
     constructor: ->
       @content = "Add text here"
+      @drag =
+        hasStarted: no
+        startOffset: [0,0]
+        startCoords: [0,0,0,0]
 
     load: (data) ->
       $.extend this, data
@@ -185,18 +190,6 @@ do ( $ = jQuery ) ->
 
           @control.find('.ha-bubble-selector').val(@target)
 
-        #clone = $(@target).clone().css
-        #  position: 'absolute'
-        #  display: 'block'
-        #  top: boundingBox.y
-        #  left: boundingBox.x
-        #  width: $(@target).outerWidth()
-        #  height: $(@target).outerHeight()
-        #  'z-index': 10101
-        #  'margin': 0
-        #  'margin-top': -parseFloat($(@target).css('margin-top'))
-        #  'margin-left': -parseFloat($(@target).css('margin-left'))
-
         @elm.find('.ha-bubble-pointer').css display: 'block'
 
         @targetArea.css
@@ -225,70 +218,88 @@ do ( $ = jQuery ) ->
       target: @target
       content: @content
 
-    handleAnchorBehavior: (anchor) ->
-      hasStartedDrag = no
-      element = @elm
-      startOffset = [0,0]
-      startCoords = [0,0,0,0]
+    ###
+      DRAG HANDLING
+    ###
+    handleMouseMove: (evt) ->
+      return unless @drag.hasStarted
 
+      drag_anchor = @drag.currentAnchor
+
+      decal = [
+        @drag.startOffset[X]-evt.pageX
+        @drag.startOffset[Y]-evt.pageY
+      ]
+
+      coords = [].concat @drag.startCoords
+
+      if ~drag_anchor.indexOf('x')
+        coords[LEFT] -= decal[X]
+        coords[TOP] -= decal[Y]
+      else
+        if ~drag_anchor.indexOf('n')
+          coords[TOP] -= decal[Y]
+          coords[HEIGHT] += decal[Y]
+        else if ~drag_anchor.indexOf('s')
+          coords[HEIGHT] -= decal[Y]
+
+        if ~drag_anchor.indexOf('e')
+          coords[WIDTH] -= decal[X]
+        else if ~drag_anchor.indexOf('w')
+          coords[LEFT] -= decal[X]
+          coords[WIDTH] += decal[X]
+
+      @x = coords[LEFT]
+      @y = coords[TOP]
+      @width = coords[WIDTH]
+      @height = coords[HEIGHT]
+
+      @refresh()
+
+    handleMouseUp: ->
+      if @drag.hasStarted
+        @drag.hasStarted = no
+        @saveChanges()
+
+    handleMouseDown: (evt) ->
+      @drag.hasStarted = yes
+
+      @drag.currentAnchor = $(evt.target).data('_position')
+
+      @drag.startOffset = [
+        evt.pageX
+        evt.pageY
+      ]
+
+      @drag.startCoords = [
+        @elm.position().left
+        @elm.position().top
+        @elm.width()
+        @elm.height()
+      ]
+
+    handleAnchorBehavior: (anchor) ->
       drag_anchor = anchor.data('_position')
 
-      $('body').on 'mousemove', (evt) =>
-        return unless hasStartedDrag
+      @handleMouseMoveInstance = @handleMouseMove.bind(this)
+      @handleMouseUpInstance = @handleMouseUp.bind(this)
 
-        decal = [
-          startOffset[X]-evt.pageX
-          startOffset[Y]-evt.pageY
-        ]
+      $('body')
+      .on('mousemove', @handleMouseMoveInstance)
+      .on('mouseup', @handleMouseUpInstance)
 
-        coords = [].concat startCoords
+      anchor.on 'mousedown', @handleMouseDown.bind(this)
 
-        if ~drag_anchor.indexOf('x')
-          coords[LEFT] -= decal[X]
-          coords[TOP] -= decal[Y]
-        else
-          if ~drag_anchor.indexOf('n')
-            coords[TOP] -= decal[Y]
-            coords[HEIGHT] += decal[Y]
-          else if ~drag_anchor.indexOf('s')
-            coords[HEIGHT] -= decal[Y]
-
-          if ~drag_anchor.indexOf('e')
-            coords[WIDTH] -= decal[X]
-          else if ~drag_anchor.indexOf('w')
-            coords[LEFT] -= decal[X]
-            coords[WIDTH] += decal[X]
-
-        @x = coords[LEFT]
-        @y = coords[TOP]
-        @width = coords[WIDTH]
-        @height = coords[HEIGHT]
-
-        @refresh()
-
-      .on 'mouseup', =>
-        if hasStartedDrag
-          hasStartedDrag = no
-          @saveChanges()
-
-      anchor.on 'mousedown', (evt) ->
-        hasStartedDrag = yes
-
-        startOffset = [
-          evt.pageX
-          evt.pageY
-        ]
-
-        startCoords = [
-          element.position().left
-          element.position().top
-          element.width()
-          element.height()
-        ]
+    ###
+      END OF DRAG HANDLING
+    ###
 
     remove: ->
+      $('body')
+      .off('mousemove', @handleMouseMoveInstance)
+      .off('mouseup', @handleMouseUpInstance)
 
-    buildEditBlock:  ->
+      @elm.remove()
 
     buildEditMode:  ->
       self = this
@@ -314,7 +325,7 @@ do ( $ = jQuery ) ->
         self.refresh()
 
       @control.find('.ha-bubble-remove').on 'click', ->
-        self.remove()
+        HelpAnywhere.deleteItem(self)
 
       content = @elm.find('.ha-bubble-content')
 

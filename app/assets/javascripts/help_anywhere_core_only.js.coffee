@@ -7,5 +7,5 @@
 #= require help_anywhere/components/component
 jQuery ($) ->
   $.get('/help_anywhere/routes').success (data)->
-    HelpAnywhere.add_routes(data)
+    HelpAnywhere.addRoutes(data)
     HelpAnywhere.render()

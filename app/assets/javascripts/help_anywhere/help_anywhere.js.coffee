@@ -75,7 +75,7 @@ do($ = jQuery) ->
             p.items[idx].content = elm.getData()
             return
 
-    @add_routes: (routes) ->
+    @addRoutes: (routes) ->
       @routes = (@routes ? [])
 
       if not routes instanceof Array
@@ -92,6 +92,14 @@ do($ = jQuery) ->
           .replace('?', '([^\\/]*)') + '$'
         @routes.push [new RegExp(regexp), value]
 
+    @deleteItem: (elm) ->
+      for p in @instance.pageList
+        for e, idx in p.items
+          if e.id is elm.id
+            p.items.splice(idx, 1)
+            elm.remove()
+            return true
+
     selectRoute: (path) ->
       for [regexp, value] in HelpAnywhere.routes
         return path.replace(regexp, value) if regexp.test(path)
@@ -102,7 +110,7 @@ do($ = jQuery) ->
 
     init: ->
       @fixBody()
-      @retrieve_resource()
+      @retrieveResource()
 
     fixBody: ->
       $("body").css
@@ -144,7 +152,6 @@ do($ = jQuery) ->
       @currentPage = toIndex
       @showPage(@currentPage) #Refreshing interface for edition mode
 
-    deleteItem: (item) ->
 
     deletePage: ->
       pageIndex = Number(@helpInterface.find('.ha-page.selected').remove().attr('data-idx'))
@@ -230,7 +237,7 @@ do($ = jQuery) ->
       .error =>
         alert('Sorry, but something went wrong')
 
-    retrieve_resource: ->
+    retrieveResource: ->
       @resource = @selectRoute window.location.pathname
 
       if @resource
