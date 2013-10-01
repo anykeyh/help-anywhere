@@ -18,7 +18,6 @@ Add in your Gemfile:
 
 Then
 
-
     bundle install
     rake help-anywhere:install:migrations
     rake help-anywhere:setup
@@ -39,7 +38,9 @@ Log-in has edit mode, and create new help page with our editor. Enjoy!
 
 == Version
 
-0.11
+0.1.1
 
-- HelpAnywhere is provided with Bubble component, but you can also build your own. Check `bubble.coffee.js`
-for more informations
+- This is the first stable release!
+- HelpAnywhere is provided with Bubble component, but you can also build your own. Check `app/javascript/bubble.coffee.js`
+  for more informations.
+  You can ignore this component. Just `require help_anywhere_core_only` in  both application.js and .css

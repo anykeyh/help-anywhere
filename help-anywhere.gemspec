@@ -7,15 +7,17 @@ require "help-anywhere/version"
 Gem::Specification.new do |s|
   s.name        = "help-anywhere"
   s.version     = HelpAnywhere::VERSION
-  s.authors     = ["yacine@kosmogo.com"]
+  s.authors     = ["Yacine Petitprez"]
   s.email       = ["yacine@kosmogo.com"]
 
-  s.homepage    = "github.com/anykeyh/help-anywhere"
+  s.homepage    = "http://github.com/anykeyh/help-anywhere"
   s.summary     = "Provide help anywhere in your web applications."
   s.description = "Provide help anywhere in web applications."
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["test/**/*"]
+  
+  s.license = 'THIS IS PROVIDED UNDER MIT LICENSE'  
 
   s.add_dependency "rails", "~> 3.2.13"
 
