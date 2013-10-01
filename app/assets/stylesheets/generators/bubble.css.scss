@@ -1,3 +1,18 @@
+.ha-hook-hover {
+  //border: solid 3px orange;
+  //box-sizing: border-box;
+  box-shadow: inset 0px 0px 0px 3px orange;
+}
+
+ .ha-bubble-target-selected {
+  border: solid 3px orange;
+  box-sizing: border-box;
+  display: 'block';
+  position: absolute;
+ }
+
+
+
 .ha-bubble-box {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -124,6 +139,24 @@
     select, input {
       width: 100%;
     }
+
+    input.ha-bubble-selector {
+      width: 150px;
+      float: left;
+    }
+
+    .ha-bubble-select-selector {
+      cursor: pointer;
+      border: solid 1px white;
+      padding: 0px 7px;
+      background-color: #DDD;
+      font-weight: bold;
+      color: #333;
+      height: 19px;
+      width: 16px;
+      float: right;
+    }
+
 
     input {
       border: solid 1px #EEE;

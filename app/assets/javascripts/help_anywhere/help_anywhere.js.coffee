@@ -206,9 +206,13 @@ do($ = jQuery) ->
       @helpInterface = null
 
     openHelpInterface: (@edit_mode=false)->
-      @helpInterface ?= $ HELP_INTERFACE_TEMPLATE(@pageList, @edit_mode)
+      return if @helpInterface?
+
+      @helpInterface = $ HELP_INTERFACE_TEMPLATE(@pageList, @edit_mode)
       @helpInterface.appendTo($("body"))
       @currentPage = 0
+      @elementsChanged = false
+
       self = this
 
       unless @edit_mode

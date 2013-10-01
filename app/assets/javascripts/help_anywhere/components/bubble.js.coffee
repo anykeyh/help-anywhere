@@ -8,6 +8,66 @@
   Here we code all logic for show and edit mode.
 ###
 do ( $ = jQuery ) ->
+
+  getAbsoluteSelectorFor = (elm) ->
+    if (id = elm.attr('id'))?
+      return "##{id}"
+
+    console.log elm.parents().toArray()
+
+    selector = elm.parents().toArray()
+    .map (x) ->
+      out = x.tagName
+      if (id = $(x).attr('id'))?
+        out += "##{id}"
+      if (classes = $(x).attr('class'))? and classes isnt ''
+        out += '.' + classes.split(/\s/g).join('.')
+      return out
+    .reverse()
+    .join('>')
+
+    selector  +=  ">:nth-child(#{elm.index()+1})"
+
+    return selector
+
+  window.HookingSystem =
+    currentMouseMoveTarget: null
+    enabled: false
+
+    callback: (selector) -> console.log selector
+
+    enable: (callback) ->
+      $("#help-anywhere-layout").css display: 'none'
+
+      @callback = callback
+      @enabled = true
+
+
+  handleMouseClick = (evt) ->
+    return unless HookingSystem.enabled
+
+    evt.preventDefault()
+    evt.stopPropagation()
+
+    $(evt.target).removeClass('ha-hook-hover')
+    $(HookingSystem.currentMouseMoveTarget).removeClass("ha-hook-hover")
+
+    HookingSystem.callback(getAbsoluteSelectorFor($(evt.target)))
+    HookingSystem.enabled = false
+
+    $("#help-anywhere-layout").css display: 'block'
+
+  handleMouseMove = (evt) ->
+    return false unless HookingSystem.enabled
+
+    $(HookingSystem.currentMouseMoveTarget).removeClass('ha-hook-hover').off('click', handleMouseClick)
+
+    $(evt.target).addClass('ha-hook-hover').on('click', handleMouseClick)
+
+    HookingSystem.currentMouseMoveTarget = evt.target
+
+  $("html").on 'mousemove', handleMouseMove
+
   BUBBLE_TEMPLATE = -> """
     <div class="ha-bubble-box">
       <div class="ha-bubble-pointer"></div>
@@ -31,7 +91,7 @@ do ( $ = jQuery ) ->
         <option value="guess">Auto</option>
       </select>
       Selector:
-      <input type="text" class="ha-bubble-selector" value="">
+      <input type="text" class="ha-bubble-selector" value=""><div class="ha-bubble-select-selector">*</div>
       <input type="button" class="ha-bubble-remove btn btn-danger" value="Remove">
     </div>
   """
@@ -328,6 +388,12 @@ do ( $ = jQuery ) ->
       @control.find('.ha-bubble-remove').on 'click', ->
         HelpAnywhere.deleteItem(self)
 
+      @control.find('.ha-bubble-select-selector').on 'click', ->
+        HookingSystem.enable (selector) ->
+          self.position = 'auto' if self.position is 'free'
+          self.control.find('.ha-bubble-selector').val(selector).trigger('change')
+
+
       content = @elm.find('.ha-bubble-content')
 
       content
@@ -365,3 +431,5 @@ do ( $ = jQuery ) ->
 
   #Register generator to generators list
   HelpAnywhere.Component.register('Bubble', Bubble)
+
+
