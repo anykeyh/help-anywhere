@@ -69,20 +69,21 @@ do ( $ = jQuery ) ->
       $('body').append(@elm)
 
       #Focusing element
-      @elm.on 'click', (evt) =>
-        @refresh()
+      if @editMode
+        @elm.on 'click', (evt) =>
+          @refresh()
 
-        evt.stopPropagation()
+          evt.stopPropagation()
 
-        HelpAnywhereEditor.focus(this)
+          HelpAnywhereEditor.focus(this)
 
-        for k,anchor of @anchors
-          anchor.css display: 'block'
+          for k,anchor of @anchors
+            anchor.css display: 'block'
 
-        @control.css display: 'block'
+          @control.css display: 'block'
 
-        if @isBinded()
-          @anchors.x.css display: 'none'
+          if @isBinded()
+            @anchors.x.css display: 'none'
 
       return @refresh()
 

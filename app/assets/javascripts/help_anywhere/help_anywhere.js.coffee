@@ -122,11 +122,11 @@ do($ = jQuery) ->
         margin: 0
 
     buildInterface: ->
-      tmpl = $(HELP_TEMPLATE())
-      tmpl.find('.ha-std-button').on 'click', =>
-        @openHelpInterface()
-
-      tmpl.css(opacity: '0')
+      unless @help?
+        @help = $(HELP_TEMPLATE())
+        @help.find('.ha-std-button').on 'click', =>
+          @openHelpInterface()
+      @help.css(display: 'block', opacity: '0')
         .animate(opacity: '1', 2000)
         .appendTo($('body'))
 
@@ -237,8 +237,12 @@ do($ = jQuery) ->
       .error =>
         alert('Sorry, but something went wrong')
 
-    retrieveResource: ->
-      @resource = @selectRoute window.location.pathname
+    retrieveResource: (resource) ->
+      @resource = resource || @selectRoute window.location.pathname
+
+      if @help?
+        @help.css(display: 'none')
+
 
       if @resource
         $.get("#{HelpAnywhere.API_URL}/resources/?name=#{@resource}").success (data) =>
