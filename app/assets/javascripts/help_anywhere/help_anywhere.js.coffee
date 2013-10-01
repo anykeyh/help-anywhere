@@ -131,12 +131,14 @@ do($ = jQuery) ->
         .appendTo($('body'))
 
     showPage: (pageIndex) ->
+      return unless @pageList[pageIndex]?
+
       @helpInterface.find('.ha-page-content').empty()
 
       @helpInterface.find('.ha-page').removeClass('selected')
       @helpInterface.find(".ha-page:nth-child(#{Number(pageIndex)+1})").addClass('selected')
 
-      return unless @pageList[pageIndex]?
+      @currentPage = pageIndex
 
       items = @pageList[pageIndex].items
 
