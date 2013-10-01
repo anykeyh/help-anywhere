@@ -136,6 +136,8 @@ do($ = jQuery) ->
       @helpInterface.find('.ha-page').removeClass('selected')
       @helpInterface.find(".ha-page:nth-child(#{Number(pageIndex)+1})").addClass('selected')
 
+      return unless @pageList[pageIndex]?
+
       items = @pageList[pageIndex].items
 
       for item in items
@@ -170,7 +172,10 @@ do($ = jQuery) ->
         @showPage(@currentPage)
 
     createNewPage: ->
-      @pageList.push items: [], number: @pageList[@pageList.length-1].number+1
+      if @pageList.length == 0
+        @pageList.push items: [], number: 0
+      else
+        @pageList.push items: [], number: @pageList[@pageList.length-1].number+1
 
       newPage = $(HELP_INTERFACE_PAGE(@pageList.length-1))
       newPage.insertBefore(@helpInterface.find('.ha-new-page'))
@@ -214,6 +219,9 @@ do($ = jQuery) ->
           else
             @showPage(@currentPage)
       else
+        if @pageList.length is 0
+          @createNewPage()
+
         @helpInterface.on 'click', -> HelpAnywhereEditor.focus(null)
         @helpInterface.find('.ha-page').on 'click', ->
           self.currentPage = $(this).attr('data-idx')
@@ -249,6 +257,8 @@ do($ = jQuery) ->
           if data.pages? and data.pages.length > 0
             @pageList = data.pages
             @buildInterface()
+          else
+            @pageList = []
 
   window.HelpAnywhere = HelpAnywhere
   window.HelpAnywhere.components = {}

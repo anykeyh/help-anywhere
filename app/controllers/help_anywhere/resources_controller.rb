@@ -24,7 +24,9 @@ class HelpAnywhere::ResourcesController < HelpAnywhere::BaseController
     resource = HelpAnywhere::Resource.find_by_name params[:name]
 
     if resource.nil?
-      render :text => "Resource not found", :status => 500
+      resource = HelpAnywhere::Resource.new
+      resource.name = params[:name]
+      resource.save!
     end
 
     page_list = JSON.parse(params[:content])

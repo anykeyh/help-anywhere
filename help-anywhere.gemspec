@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.summary     = "Provide help anywhere in your web applications."
   s.description = "Provide help anywhere in web applications."
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
   
   s.license = 'THIS IS PROVIDED UNDER MIT LICENSE'  
