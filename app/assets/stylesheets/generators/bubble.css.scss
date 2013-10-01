@@ -1,0 +1,194 @@
+.ha-bubble-box {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  padding: 10px;
+  background-color: white;
+  border-radius: 12px;
+  border: solid 3px black;
+  box-shadow: 4px 4px 9px rgba(0,0,0,0.3);
+  position: absolute;
+  display: block;
+  width: 100px;
+
+  .ha-bubble-anchor {
+    position: absolute;
+    display: none;
+    width: 6px;
+    height: 6px;
+
+    border: dotted 2px blue;
+    margin: -4px;
+
+    cursor: pointer;
+
+    &:hover {
+      border: solid 2px blue;
+      background-color: white;
+    }
+
+    &.x {
+      border: solid 2px blue;
+      border-radius: 50%;
+      left: 50%; top: 50%;
+      cursor: move;
+    }
+
+    &.nw {
+      top: 0%; left: 0%;
+      cursor: nw-resize;
+    }
+    &.n {
+      top: 0%; left: 50%;
+      cursor: n-resize;
+    }
+
+    &.ne {
+      top: 0; left: 100%;
+      cursor: ne-resize;
+    }
+
+    &.e {
+      top: 50%; left: 100%;
+    }
+
+    &.se {
+      top: 100%; left: 100%;
+      cursor: se-resize;
+    }
+
+    &.s {
+      top: 100%; left: 50%;
+      cursor: s-resize;
+    }
+
+    &.sw {
+      top: 100%; left: 0%;
+      cursor: sw-resize;
+    }
+
+    &.w {
+      top: 50%; left: 0%;
+      cursor: w-resize;
+    }
+  }
+
+  .ha-bubble-content {
+    &:focus {
+      -webkit-touch-callout: auto;
+      -webkit-user-select: auto;
+      -khtml-user-select: auto;
+      -moz-user-select: auto;
+      -ms-user-select: auto;
+      user-select: auto;
+      text-align: left;
+    }
+
+    text-align: justify;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ha-bubble-edit-box {
+    display: none;
+    background-color: #333;
+    color: white;
+
+    width: 175px;
+    height: auto;
+    padding: 5px;
+
+    position: absolute;
+    margin-left: 10px;
+    top: 0;
+    left: 100%;
+    z-index:  1;
+
+    opacity: 0.2;
+
+    transition: opacity ease-in-out 0.3s;
+    -moz-transition: opacity ease-in-out 0.3s;
+    -o-transition: opacity ease-in-out 0.3s;
+    -webkit-transition: opacity ease-in-out 0.3s;
+    -ms-transition: opacity ease-in-out 0.3s;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    select, input {
+      width: 100%;
+    }
+
+    input {
+      border: solid 1px #EEE;
+    }
+  }
+
+  .ha-bubble-pointer {
+    position: absolute;
+
+    width: 15px;
+    height: 15px;
+    background-color: white;
+
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+
+    /*
+     * Note: right, left, bottom and top refer at the position
+     * of the target element, not the pointer itself.
+     */
+    &.pointer-right {
+      border-top: solid 3px black;
+      border-left: solid 3px black;
+
+      margin-top: -9px;
+      margin-left: -11px;
+
+
+      top: 50%;
+      left: 0;
+    }
+
+    &.pointer-left {
+      border-bottom: solid 3px black;
+      border-right: solid 3px black;
+
+      margin-top: -9px;
+      margin-right: -11px;
+
+      top: 50%;
+      right: 0;
+    }
+
+    &.pointer-bottom {
+      border-top: solid 3px black;
+      border-right: solid 3px black;
+
+      margin-top: -11px;
+      margin-left: -9px;
+
+      top: 0;
+      left: 50%;
+    }
+
+    &.pointer-top {
+      border-bottom: solid 3px black;
+      border-left: solid 3px black;
+
+      margin-bottom: -11px;
+      margin-left: -9px;
+
+      bottom: 0;
+      left: 50%;
+    }
+  }
+}

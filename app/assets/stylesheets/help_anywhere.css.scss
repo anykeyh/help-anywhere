@@ -1,0 +1,174 @@
+/*
+ *=require generators/bubble
+ */
+
+#help-anywhere-widget {
+  position: fixed;
+  display: block;
+
+  width: auto;
+  padding-left: 3px;
+  padding-right: 3px;
+  height: 20px;
+  border-left: solid 2px white;
+  border-bottom: solid 2px white;
+  border-right: solid 2px white;
+
+  background: #333;
+  top: 0;
+  left: 70%;
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+
+  font-family: Helvetica, Arial, sans-serif;
+  cursor: pointer;
+
+  color: white;
+  box-shadow: 1px 1px 5px black;
+  font-size: 12px;
+  text-align: center;
+
+  &:hover {
+    border-color: yellow;
+    color: yellow;
+  }
+}
+
+#help-anywhere-layout {
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  position: absolute;
+  min-width: 100%;
+  min-height: 100%;
+  left: 0;
+  top: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 10001;
+
+  .ha-new-component {
+    color: white;
+  }
+
+  .ha-toolbox {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 200px;
+    background-color: #333;
+  }
+
+  .ha-edit-bottom-layout {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #333;
+    width: 100%;
+
+    .ha-page-list {
+      .ha-page-list-container {
+        width: 100%;
+        overflow-x: auto;
+      }
+
+      .ha-new-page {
+        cursor: pointer;
+
+        display: inline-block;
+        padding: 20px;
+
+        height: 20px;
+        width: 60px;
+
+        background-color: white;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .ha-page {
+        cursor: pointer;
+
+        display: inline-block;
+        padding: 20px;
+
+        height: 20px;
+        width: 60px;
+
+        background-color: white;
+        text-align: center;
+        font-weight: bold;
+
+        border-right: solid 2px #333;
+
+        &.selected {
+          box-shadow: inset 0px 0px 0px 5px red;
+        }
+
+        &:hover {
+          box-shadow: inset 0px 0px 0px 5px orange;
+        }
+
+        &:first-child {
+          border-left: none;
+        }
+      }
+    }
+  }
+}
+
+ .ha-bubble-target-selected {
+  border: solid 3px orange;
+  box-sizing: border-box;
+  display: 'block';
+  position: absolute;
+ }
+
+
+
+.ha-hover {
+  box-shadow: inset 0px 0px 1px 1px red, inset 0px 0px 2px 2px white !important;
+}
+
+#help-anywhere-selectbox {
+  position: absolute;
+  border-radius: 5px;
+  background-color: #EEE;
+  border: solid 1px #BBB;
+  box-shadow: 4px 4px 8px #999;
+
+  font-family: Helvetica, Arial, sans-serif;
+
+  ul {
+    list-style: none;
+    margin: 0;
+
+    padding: 5px 0px;
+
+    li {
+      min-width: 64px;
+      padding: 0;
+      color: #333;
+      font-size: 70%;
+      padding: 0px 5px;
+      cursor: pointer;
+
+      font-weight: bold;
+
+      border-top: solid 1px transparent;
+      border-bottom: solid 1px transparent;
+
+      &:hover {
+        color: white;
+        background-color: lighten(#36D, 10%);
+
+        border-bottom-color: lighten(#36D, 5%);
+        border-top-color: lighten(#36D, 15%);
+      }
+
+      a {
+        display: block;
+        color: white;
+        text-decoration: none;
+      }
+    }
+  }
+}
