@@ -34,5 +34,8 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = false
 end
 
-
 task :default => :test
+
+task :server, [:args] do |t, args|
+  exec "cd test/dummy && rails s #{args[:args]}"
+end
