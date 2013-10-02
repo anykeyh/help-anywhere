@@ -1,8 +1,7 @@
 do($ = jQuery) ->
   HELP_TEMPLATE = (args) ->
     """
-      <div id="help-anywhere-widget">
-        <div class="ha-std-button" title="Help">?</div>
+      <div id="help-anywhere-widget" title="Help">?
       </div>
     """
 
@@ -123,8 +122,7 @@ do($ = jQuery) ->
     buildInterface: ->
       unless @help?
         @help = $(HELP_TEMPLATE())
-        @help.find('.ha-std-button').on 'click', =>
-          @openHelpInterface()
+        @help.on 'click', => @openHelpInterface()
       @help.css(display: 'block', opacity: '0')
         .animate(opacity: '1', 2000)
         .appendTo($('body'))

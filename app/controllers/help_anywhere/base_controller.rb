@@ -4,7 +4,8 @@ class HelpAnywhere::BaseController < ApplicationController
 private
   def check_authentication
     unless HelpAnywhere.config.has_edition_role? self
-      raise "You are not authorized to edit help"
+      render :text => "You are not authorized to edit help", :status => 403
+      return
     end
   end
 end

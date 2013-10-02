@@ -18,13 +18,14 @@ do ( $ = jQuery ) ->
     if (id = elm.attr('id'))?
       return "##{id}"
 
-    selector = elm.parents().toArray()
+    selector = elm.parents()[0..-2].toArray()
     .map (x) ->
       out = x.tagName
       if (id = $(x).attr('id'))?
         out += "##{id}"
       if (classes = $(x).attr('class'))? and classes isnt ''
         out += classes.split(/\s/g).map((x)-> '.' + x).join()
+      out += ":nth-child(#{$(x).index()+1})"
       return out
     .reverse()
     .join('>')
@@ -91,7 +92,25 @@ do ( $ = jQuery ) ->
 
   $("html").on 'mousemove', handleMouseMove
   $("html").on 'mousedown', handleMouseDown
+  ###
+    END HTML SELECTION SYSTEM
+  ###
 
+  ###
+    HANDLING RESIZING
+  ###
+
+  $(window).on('scroll resize', ->
+
+  )
+
+  ###
+    END HANDLING RESIZING
+  ###
+
+  ###
+    HTML TEMPLATES FOR ELEMENTS
+  ###
   BUBBLE_TEMPLATE = -> """
     <div class="ha-bubble-box">
       <div class="ha-bubble-pointer"></div>
@@ -119,6 +138,9 @@ do ( $ = jQuery ) ->
       <input type="button" class="ha-bubble-remove btn btn-danger" value="Remove">
     </div>
   """
+  ###
+    END HTML TEMPLATES
+  ###
 
   # Just constants to get named into array for d&d of resize handling
   X = 0
@@ -141,6 +163,8 @@ do ( $ = jQuery ) ->
 
     build: (editMode) ->
       @elm = $(BUBBLE_TEMPLATE.call(this))
+
+      @elm.data('_component', this)
 
       @editMode = editMode
 
@@ -240,27 +264,27 @@ do ( $ = jQuery ) ->
         switch finalPosition
           when 'top'
             @elm.css
-              top: (boundingBox.y - bubbleSize[1]) + "px"
-              left: boundingBox.x + Math.round((boundingBox.w-bubbleSize[0])/2) + "px"
+              top: Math.max(0, (boundingBox.y - bubbleSize[1])) + "px"
+              left: Math.max(0, boundingBox.x + Math.round((boundingBox.w-bubbleSize[0])/2)) + "px"
               'margin-top': '-14px'
               'margin-left': '0px'
           when 'bottom'
             @elm.css
-              top: boundingBox.y2 + "px"
-              left: boundingBox.x + Math.round((boundingBox.w-bubbleSize[0])/2) + "px"
+              top: Math.max(0, boundingBox.y2) + "px"
+              left: Math.max(0, boundingBox.x + Math.round((boundingBox.w-bubbleSize[0])/2)) + "px"
               'margin-top': '14px'
               'margin-left': '0px'
           when 'right'
             @elm.css
-              top: boundingBox.y + Math.round((boundingBox.h-bubbleSize[1])/2) + "px"
-              left: boundingBox.x2 + "px"
+              top: Math.max(0, boundingBox.y + Math.round((boundingBox.h-bubbleSize[1])/2)) + "px"
+              left: Math.max(0, boundingBox.x2) + "px"
               'margin-left': '14px'
               'margin-top': '0px'
           else
             @position = 'left'
             @elm.css
-              top: boundingBox.y + Math.round((boundingBox.h-bubbleSize[1])/2) + "px"
-              left: (boundingBox.x - bubbleSize[0]) + "px"
+              top: Math.max(0, boundingBox.y + Math.round((boundingBox.h-bubbleSize[1])/2)) + "px"
+              left: Math.max(0, (boundingBox.x - bubbleSize[0])) + "px"
               'margin-left': '-14px'
               'margin-top': '0px'
 
