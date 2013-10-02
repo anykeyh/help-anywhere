@@ -63,8 +63,7 @@ do($ = jQuery) ->
         return true
       else
         return false
-    @hide: ->
-      @instance.closeHelpInterface()
+    @hide: -> @instance.closeHelpInterface()
     @edit: -> @show(yes)
 
     @saveElement: (elm) ->
@@ -84,12 +83,12 @@ do($ = jQuery) ->
       for [regexp, value] in routes
         regexp = '^' +
           regexp
-          .replace('/', '\\/')
-          .replace('.', '\\.')
-          .replace('**', '.*')
-          .replace('*', '[^\\/]*')
-          .replace('??', '(.*)')
-          .replace('?', '([^\\/]*)') + '$'
+          .replace(/\//g, '\\/')
+          .replace(/\./g, '\\.')
+          .replace(/\*/g, '[^\\/]*')
+          .replace(/\.\.\./g, '.*') #/[\.]{3}/ ??
+          .replace(/\?\?/g, '(.*)')
+          .replace(/\?/, '([^\\/]*)') + '$'
         @routes.push [new RegExp(regexp), value]
 
     @deleteItem: (elm) ->

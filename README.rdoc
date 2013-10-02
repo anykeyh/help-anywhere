@@ -36,7 +36,58 @@ See help-anywhere-example project for more information!
 
 Log-in has edit mode, and create new help page with our editor. Enjoy!
 
+== Require authorization for edit mode.
+
+If you just follow the steps before, there is no authorization needed to edit the pages and components of your help.
+But you can add it easily:
+
+in `yourapp/config/initializers/help_anywhere.rb` just set:
+
+  HelpAnywhere.configure do |config|
+    # Set here the method which is called to allow or disallow edition mode
+    # You can create this method in your ApplicationController class.
+    # By default, this will always return always true: every one can edit help.
+    config.edition_role = :can_user_edit_help?
+  end
+
+
+== Routing the content
+
+You can route dynamically for your help resource. A route will match an url with a specific help resource name.
+
+Example:
+
+
+  config.routes do |routes|
+    routes.match '/articles/*/show...', 'articles#show'
+  end
+
+
+This will allow every resource located at http://mywebsite/articles/xxxx/show(/xxx/yyy/zzz...) to share the same help (here articles#show page).
+
+You can use `*` to wilcard a path level, and `...` to wilcard everything after. Samely, you can use `?` and  `??` to use it in output:
+
+Example:
+
+    config.routes do |routes|
+      routes.match '/?/*/?', '$1#$2' # ex: url /resource/1/edit <=> resource#edit help page
+    end
+
+
+By default, every url create a new help resource. Keep in mind the hash part of the url is not used. For plugins for ajax which use hash part (like jquery-bbq), you need to refine manually the route like this:
+
+
+    $(window).bind( 'hashchange', function(e) {
+      //Force help-anywhere to get resource manually
+      HelpAnywhere.retrieveResource(HelpAnywhere.selectRoute($.param.fragment()));
+    });
+
 == Version
+
+0.1.4
+
+- Now you can bind a bubble to an element without typing the selector manually. A button provide an interface to select an object into the page.
+  You can select anything, but take care about dynamic content (over routes), otherwise your block can be missplaced! 
 
 0.1.1
 

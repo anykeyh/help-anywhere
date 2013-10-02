@@ -50,9 +50,9 @@ module HelpAnywhere
       self.match_data << [ regexp, result ]
     end
 
-    def ignore regexp
-      self.ignore_data << [ regexp, result ]
-    end
+    #def ignore regexp
+    #  self.ignore_data << [ regexp, result ]
+    #end
 
     def to_json *args
       arr = self.match_data + DEFAULTS_ROUTES

@@ -9,11 +9,14 @@
 ###
 do ( $ = jQuery ) ->
 
+  ###
+    HTML SELECTION SYSTEM
+  ###
   getAbsoluteSelectorFor = (elm) ->
+    return '' if elm.get(0).tagName is 'BODY'
+
     if (id = elm.attr('id'))?
       return "##{id}"
-
-    console.log elm.parents().toArray()
 
     selector = elm.parents().toArray()
     .map (x) ->
@@ -21,7 +24,7 @@ do ( $ = jQuery ) ->
       if (id = $(x).attr('id'))?
         out += "##{id}"
       if (classes = $(x).attr('class'))? and classes isnt ''
-        out += '.' + classes.split(/\s/g).join('.')
+        out += classes.split(/\s/g).map((x)-> '.' + x).join()
       return out
     .reverse()
     .join('>')
@@ -34,39 +37,60 @@ do ( $ = jQuery ) ->
     currentMouseMoveTarget: null
     enabled: false
 
-    callback: (selector) -> console.log selector
+    callback: (selector) ->
 
     enable: (callback) ->
       $("#help-anywhere-layout").css display: 'none'
 
-      @callback = callback
-      @enabled = true
+      @callback      = callback
+      @enabled       = true
+      @stopMouseMove = false
 
+
+  handleMouseDown = (evt) ->
+    return true unless HookingSystem.enabled
+
+    HookingSystem.antiClickLayer ?= $('<div>').css(
+      position: 'fixed'
+      width: '100%'
+      height: '100%'
+      'background-color': 'transparent'
+      'z-index': '20001'
+      top: '0'
+      left: '0'
+    )
+
+    HookingSystem.antiClickLayer.appendTo($('body'))
+    HookingSystem.antiClickLayer.on 'mouseup', handleMouseClick
+    HookingSystem.stopMouseMove =  true
 
   handleMouseClick = (evt) ->
-    return unless HookingSystem.enabled
-
     evt.preventDefault()
     evt.stopPropagation()
 
-    $(evt.target).removeClass('ha-hook-hover')
     $(HookingSystem.currentMouseMoveTarget).removeClass("ha-hook-hover")
 
-    HookingSystem.callback(getAbsoluteSelectorFor($(evt.target)))
+    HookingSystem.callback(getAbsoluteSelectorFor($(HookingSystem.currentMouseMoveTarget)))
     HookingSystem.enabled = false
+
+    HookingSystem.antiClickLayer.remove()
+
+    HookingSystem.antiClickLayer = null
+    HookingSystem.currentMouseMoveTarget = null
 
     $("#help-anywhere-layout").css display: 'block'
 
   handleMouseMove = (evt) ->
-    return false unless HookingSystem.enabled
+    return true unless HookingSystem.enabled and not HookingSystem.stopMouseMove
 
-    $(HookingSystem.currentMouseMoveTarget).removeClass('ha-hook-hover').off('click', handleMouseClick)
+    $(HookingSystem.currentMouseMoveTarget).removeClass('ha-hook-hover')
 
-    $(evt.target).addClass('ha-hook-hover').on('click', handleMouseClick)
+    $(evt.target).addClass('ha-hook-hover')
 
     HookingSystem.currentMouseMoveTarget = evt.target
 
   $("html").on 'mousemove', handleMouseMove
+  $("html").on 'mousedown', handleMouseDown
 
   BUBBLE_TEMPLATE = -> """
     <div class="ha-bubble-box">
@@ -186,7 +210,7 @@ do ( $ = jQuery ) ->
         docW = parseFloat(documentSize[0])
         docH = parseFloat(documentSize[1])
 
-        unless @position || @position is 'guess' #Guess mode
+        if not @position || @position is 'guess' #Guess mode
           ###
             x,y-------x2,y
             |          |
@@ -361,6 +385,7 @@ do ( $ = jQuery ) ->
       .off('mouseup', @handleMouseUpInstance)
 
       @elm.remove()
+      @targetArea.remove()
 
     buildEditMode:  ->
       self = this
@@ -377,13 +402,13 @@ do ( $ = jQuery ) ->
 
       @control.find('.ha-bubble-position').on 'change', ->
         self.position = $(this).val()
-        self.saveChanges()
         self.refresh()
+        self.saveChanges()
 
       @control.find('.ha-bubble-selector').on 'change', ->
         self.target = $(this).val()
-        self.saveChanges()
         self.refresh()
+        self.saveChanges()
 
       @control.find('.ha-bubble-remove').on 'click', ->
         HelpAnywhere.deleteItem(self)
