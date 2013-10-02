@@ -1,5 +1,4 @@
 #coding: utf-8
-require 'colorize'
 
 namespace :help_anywhere do
   desc "Generate everything you need to run help-anywhere plugin."
@@ -10,7 +9,7 @@ namespace :help_anywhere do
     filepath = File.join Dir.pwd, relpath
 
     if File.exists?(filepath)
-      puts "[X] ".white + "Skipping `#{relpath}`: File already exists".yellow
+      puts "[X] Skipping `#{relpath}`: File already exists"
     else
       File.write filepath,
 <<-RUBY
@@ -29,7 +28,7 @@ HelpAnywhere.configure do |config|
     # routes.match '/admin/?/*/?...', 'admin_help_for_resource_$1_action_$2'
   end
 
-  # Set here the method which is called to allow or disallow edition mode
+  # Set here the method which is called to alloww or disallow edition mode
   # You can create this method in your ApplicationController class.
   # Default is a method which return always true: every one can edit help.
   #
@@ -37,9 +36,9 @@ HelpAnywhere.configure do |config|
 end
 RUBY
 
-      puts "[»]".white + " create `#{relpath}`".green
+      puts "[»] create `#{relpath}`"
     end
 
-    puts "[»]".white + "Done! please add `require help_anywhere` in both application.js and application.css, run migrations, enjoy!".green
+    puts "[»] Done! please add `require help_anywhere` in both application.js and application.css, run migrations, enjoy!"
   end
 end
