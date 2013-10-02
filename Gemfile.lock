@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    help-anywhere (0.1.4b)
+    help-anywhere (0.1.5)
       rails (~> 3.2.13)
 
 GEM
